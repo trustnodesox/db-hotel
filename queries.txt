@@ -1,0 +1,55 @@
+SELECT *
+FROM `ospiti`
+WHERE `document_type` = "CI";
+
+
+SELECT *
+FROM `ospiti`
+WHERE `date_of_birth` >= "1989";
+
+
+SELECT * FROM `ospiti`
+WHERE `date_of_birth` < '2001' ;
+
+
+SELECT * FROM `ospiti`
+WHERE `name` LIKE 'D%';
+
+
+SELECT SUM(price)
+FROM `pagamenti`
+WHERE `status` = 'accepted';
+
+
+SELECT MAX(price)
+FROM `pagamenti`;
+
+
+SELECT *
+FROM `ospiti`
+WHERE `document_type` = "Driver License"
+AND `date_of_birth`
+LIKE '1975%';
+
+
+SELECT COUNT(ospite_id)
+FROM `paganti`;
+
+
+SELECT SUM(beds)
+FROM `stanze`;
+
+	      //BONUS//
+
+SELECT COUNT(id), YEAR(date_of_birth)
+FROM `ospiti`
+GROUP BY  YEAR(date_of_birth);
+
+
+SELECT SUM(price), `status`
+FROM `pagamenti`
+GROUP BY status;
+
+
+SELECT `stanza_id`,COUNT(stanza_id)
+FROM `prenotazioni` GROUP BY stanza_id;
