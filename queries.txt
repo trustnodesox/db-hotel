@@ -39,7 +39,7 @@ FROM `paganti`;
 SELECT SUM(beds)
 FROM `stanze`;
 
-	      //BONUS//
+	      //GROUP//
 
 SELECT COUNT(id), YEAR(date_of_birth)
 FROM `ospiti`
@@ -53,3 +53,58 @@ GROUP BY status;
 
 SELECT `stanza_id`,COUNT(stanza_id)
 FROM `prenotazioni` GROUP BY stanza_id;
+
+	       //JOIN//
+
+SELECT `ospiti`.`name`, `ospiti`.`lastname`,
+COUNT(`prenotazioni_has_ospiti`.`id`)
+FROM `prenotazioni_has_ospiti`
+INNER JOIN `ospiti` ON `prenotazioni_has_ospiti`.`ospite_id` = `ospiti`.`id`
+GROUP BY (`prenotazioni_has_ospiti`.`ospite_id`)
+HAVING COUNT(`prenotazioni_has_ospiti`.`id`) > 2
+
+
+SELECT `prenotazioni_has_ospiti`.`prenotazione_id`, `ospiti`.`id`, `ospiti`.`name`, `ospiti`.`lastname`
+FROM `prenotazioni_has_ospiti`
+INNER JOIN `ospiti`
+ON `prenotazioni_has_ospiti`.`ospite_id` = `ospiti`.`id`
+
+
+SELECT `ospiti`.`name`, `ospiti`.`lastname`, `pagamenti`.`price`, `pagamenti`.`created_at`, `pagamenti`.`status`
+FROM `ospiti`
+INNER JOIN `paganti`
+ON `ospiti`.`id` = `paganti`.`ospite_id`
+INNER JOIN `pagamenti`
+ON `pagamenti`.`pagante_id` = `paganti`.`id`
+WHERE YEAR(`pagamenti`.`created_at`) = "2018"
+AND MONTH(`pagamenti`.`created_at`) = "5"
+AND `pagamenti`.`status` = "accepted"
+
+
+SELECT SUM(`pagamenti`.price)
+FROM `prenotazioni`
+INNER JOIN `pagamenti` 
+ON `prenotazioni`.`id` = `pagamenti`.`prenotazione_id`
+INNER JOIN `stanze`
+ON `stanze`.`id` = `prenotazioni`.`stanza_id`
+WHERE `stanze`.`floor`= "1"
+
+
+SELECT `prenotazioni`.id, `paganti`.`name`, `paganti`.`lastname`, `ospiti`.`date_of_birth`, `pagamenti`.`price`, `ospiti`.`document_type`, `ospiti`.`document_number`
+FROM `prenotazioni`
+INNER JOIN `pagamenti`
+ON `prenotazioni`.`id` = `pagamenti`.`prenotazione_id`
+INNER JOIN `paganti`
+ON `pagamenti`.`pagante_id`= `paganti`.`id`
+INNER JOIN `ospiti`
+ON `ospiti`.`id` = `paganti`.`ospite_id`
+WHERE `prenotazioni`.`id` = "7"
+
+
+SELECT `prenotazioni`.stanza_id, `stanze`.`id`, `stanze`.`room_number`
+FROM `prenotazioni`
+RIGHT JOIN `stanze`
+ON `prenotazioni`.`stanza_id` = `stanze`.`id`
+WHERE `prenotazioni`.`stanza_id` IS NULL
+
+
